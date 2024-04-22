@@ -3,15 +3,75 @@ using System.Xml.Linq;
 
 string[] monsterNames = ["Slime", "Goblin", "Orc", "Troll", "Dragon"];
 string[] creatureTypes = ["Abberation", "Beast", "Humanoid"];
+int[] possibleBaseRolls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-Monster Slime = new Monster("Slime", "Abberation", 10, 10, 10, 10, 10, .2f);
-Player PlayerOne = new Player("Karrigan", "Warrior", 10, 10, 10, 10, 10, 2f);
+Console.WriteLine("Welcome to the game. Would you like to start a new game? \n" 
+    + "Options:\n"
+    + "1: New Game\n"
+    + "2: Continue");
 
-Console.WriteLine(PlayerOne.GetName());
+string newGameOrContinue = Console.ReadLine();
+bool newGame = false;
+
+switch (newGameOrContinue)
+{
+    case "1": newGame = true; break;
+    case "2": newGame = false; break;
+}
+if (newGame)
+{
+    Player player = InitializePlayer();
+
+    Console.WriteLine($"Your name is {player.Name()}. You are a {player.GetClass()}. Your strength is {player.GetStats()[0]}. Your intelligence is {player.GetStats()[1]}. You dexterity is {player.GetStats()[2]}. Your HP is {player.GetHealthPoints()}. Your AC is {player.GetArmorClass()}. Your attack bonus is {player.GetAttackBonus()}. Are you pleased with this result?");
+}
+Player InitializePlayer()
+{
+    int allotedStatPoints = 20;
+
+    Console.WriteLine("Greetings hero, what is your name?");
+    string playerName = Console.ReadLine();
+
+    Console.WriteLine($"Thank you, {playerName}. What class do you want to play?");
+    string playerClass = Console.ReadLine();
+
+    Console.WriteLine("Please allocate your stats.");
+    Console.Write("Strength: ");
+    int playerStrength = Convert.ToInt32(Console.ReadLine());
+    Console.Write("Intelligence: ");
+    int playerIntelligence = Convert.ToInt32(Console.ReadLine());
+    Console.Write("Dexterity: ");
+    int playerDexterity = Convert.ToInt32(Console.ReadLine());
+
+    float playerAttackBonus = 0;
+
+    if (playerClass == "Warrior" || playerClass == "warrior")
+    {
+        playerAttackBonus = .02f * playerStrength;
+    }
+
+    if (playerClass == "Rogue" || playerClass == "rogue")
+    {
+        playerAttackBonus = .02f * playerDexterity;
+    }
+
+    int playerArmorClass = 10;
+    int playerHealth = 10;
+
+    Player player = new Player(playerName, playerClass, playerHealth, playerArmorClass, playerStrength, playerIntelligence, playerDexterity, playerAttackBonus);
+
+    return player;
+
+}
+
 
 void Combat(int playerInput, Monster monster, Player player) 
 {
+    
     int roundCount = 1;
+    bool isPlayersTurn;
+    bool isMonstersTurn;
+    
+
     switch (playerInput)
     {
         case 1: break;
@@ -31,7 +91,7 @@ class Player
 
     private float attackBonus = 0.2f;
 
-    public string GetName()
+    public string Name()
     {
         return name;
     }
@@ -39,10 +99,18 @@ class Player
     {
         return Class;
     }
-
+    public string SetClass(string value)
+    {
+        return Class = value;
+    }
     public int GetHealthPoints()
     {
         return healthPoints;
+    }
+
+    public int SetHealthPoints(int value)
+    {
+        return healthPoints = value;
     }
 
     public int GetArmorClass()
